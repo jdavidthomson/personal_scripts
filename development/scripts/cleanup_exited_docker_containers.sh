@@ -1,14 +1,11 @@
 #!/bin/bash
 
-PROMT_FOR_DELETE=false
+PROMT_FOR_DELETE=true
 
 SAMPLE_TARGET_IMAGE_ID="90e2f90cf846"
 SAMPLE_TI_LEN=$(echo $SAMPLE_TARGET_IMAGE_ID|wc -c)
 EXITED_DOCKER_CONTAINERS=$(docker container ls -f "status=exited" --format='{{.ID}}|{{.Image}}')
 
-if [ $PROMT_FOR_DELETE == true ]; then
-	prompt_delete_containers
-fi
 prompt_delete_containers() {
 	EXITED_DOCKER_CONTAINERS=$(docker container ls -f "status=exited" --format='{{.ID}}|{{.Image}}')
 	for i in $EXITED_DOCKER_CONTAINERS;do
@@ -41,7 +38,9 @@ delete_containers() {
             fi
         done
 }
-
+if [ $PROMT_FOR_DELETE == true ]; then
+        prompt_delete_containers
+fi
 if [ $PROMT_FOR_DELETE == false ]; then
 	input=""
         IFS= read -p "This is going to remove all exited containers.  Continue ? ...>     " -r line
